@@ -1,0 +1,9 @@
+- name: base.yaml
+  hosts: all
+  tasks:
+  - apt: name=systemd-sysv, git,tcpdump,htop,curl,wget,vim,ntp,lsof,info,apt-utils,cron,logrotate,rsyslog,coreutils,dpkg,findutils,gzip,hostname,iproute,mount,sed,tar,adduser,nano update_cache=yes
+  - name: restart machine
+    command: shutdown -r now "Ansible updates triggered"
+    async: 0
+    poll: 0
+    ignore_errors: true

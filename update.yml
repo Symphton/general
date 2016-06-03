@@ -1,0 +1,4 @@
+- name: update.yaml
+  hosts: all
+  tasks:
+  - apt: upgrade=full update_cache=yes

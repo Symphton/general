@@ -1,0 +1,58 @@
+- name: base.yaml
+  hosts: openstack
+  tasks:
+  - name: Add EPEL repo
+    yum_repository:
+      name: epel
+      description: EPEL YUM repo
+      file: external_repos
+      baseurl: http://mirror.23media.de/epel/7Server/x86_64/
+      gpgcheck: no
+
+  - name: Add RPMforge repo
+    yum_repository:
+      name: rpmforge
+      description: RPMforge YUM repo
+      file: external_repos
+      baseurl: http://apt.sw.be/redhat/el7/en/x86_64/rpmforge/
+      mirrorlist: http://mirrorlist.repoforge.org/el7/mirrors-rpmforge
+      enabled: no
+
+  - name: upgrade all packages
+    yum: name=* state=latest
+  
+  - name: install all critical packages
+    yum: name={{ item }} state=latest
+    with_items:
+      - git
+      - net-tools
+      - tcpdump
+      - htop
+      - curl
+      - wget
+      - vim
+      - ntp
+      - lsof
+      - info
+      - rsyslog
+      - coreutils
+      - dpkg
+      - findutils
+      - gzip
+      - hostname
+      - iproute
+      - sed
+      - tar
+      - stat
+      - nmap
+  
+  - name: restart machine
+    shell: sleep 2 && shutdown -r now "Ansible updates triggered"
+    async: 1
+    poll: 0
+    become: true
+    ignore_errors: true
+
+  - name: waiting for server to come back
+    local_action: wait_for port=22 host={{ inventory_hostname }} state=started delay=30 timeout=300
+    become: false
