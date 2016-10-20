@@ -1,4 +1,0 @@
-- name: update.yaml
-  hosts: all
-  tasks:
-  - apt: name=systemd-sysv,htop,curl,wget,vim,ntp,lsof,info,apt-utils,cron,logrotate,rsyslog,coreutils,dpkg,findutils,gzip,hostname,iproute,mount,sed,tar,adduser,nano update_cache=yes
