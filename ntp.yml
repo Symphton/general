@@ -1,0 +1,24 @@
+# Description: Install and configure Chrony
+# Author: Jelle Hoylaerts
+#
+# Tutorial: https://www.server-world.info/en/note?os=CentOS_7&p=ntp&f=3
+#
+# Example: ansible-playbook -vvl ntp ntp.yml
+
+- name: Install and configure Chrony
+  hosts: ntp
+
+  tasks:
+  - name: Update packages
+    yum: name=* state=latest
+
+  - name: Install Chrony packages
+    yum: name={{ item }} state=latest
+    with_items:
+      - chrony
+
+  - name: Copy /etc/chrony.conf
+    template: src=templates/etc/chrony.conf dest=/etc/chrony.conf backup=yes
+  
+  - name: Start and enable Chronyd service
+    systemd: name=chronyd state=restarted enabled=true

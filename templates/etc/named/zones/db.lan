@@ -1,0 +1,17 @@
+@       IN      SOA     dns1.lan. admin.lan. (
+                  {{ serial }}     ; Serial
+             604800     ; Refresh
+              86400     ; Retry
+            2419200     ; Expire
+             604800 )   ; Negative Cache TTL
+
+; name servers - NS records
+                IN      NS      dns1.lan.
+                IN      NS      dns2.lan.
+
+; name servers - A records
+dns1.lan.       IN      A       {{ master_ip }}
+dns2.lan.	IN      A       {{ slave_ip }}
+
+; 172.16.0.0/16 - A records
+master.lan.	IN      A       172.16.0.80

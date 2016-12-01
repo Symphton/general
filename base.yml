@@ -1,10 +1,12 @@
 - name: base.yaml
   hosts: all
   tasks:
+  - name: set timezone to Europe/Brussels
+    timezone: name=Europe/Brussels
+
   - name: Install base packages
-    yum: name={{ item }}
+    yum: name={{ item }} state=latest
     with_items:
-      - systemd-sysv
       - git
       - tcpdump
       - curl
@@ -22,6 +24,7 @@
       - iproute
       - sed
       - tar
+      - bind-utils
 
   - name: restart machine
     shell: sleep 2 && shutdown -r now "Ansible updates triggered"

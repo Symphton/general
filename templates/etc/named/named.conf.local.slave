@@ -1,0 +1,11 @@
+zone "lan" {
+    type slave;
+    file "slaves/db.lan";
+    masters { {{ master_ip }}; };  # ns1 private IP
+};
+
+zone "16.172.in-addr.arpa" {
+    type slave;
+    file "slaves/db.172.16";
+    masters { {{ master_ip }}; };  # ns1 private IP
+};

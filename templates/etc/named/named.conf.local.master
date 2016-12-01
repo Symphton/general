@@ -1,0 +1,8 @@
+zone "lan" {
+    type master;
+    file "/etc/named/zones/db.lan"; # zone file path
+};
+zone "16.172.in-addr.arpa" {
+    type master;
+    file "/etc/named/zones/db.172.16";  # 172.16.0.0/16 subnet
+    };

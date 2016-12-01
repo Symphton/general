@@ -1,0 +1,55 @@
+# Description: Install and configure BIND
+# Author: Jelle Hoylaerts
+#
+# Tutorial: https://www.digitalocean.com/community/tutorials/how-to-configure-bind-as-a-private-network-dns-server-on-centos-7
+# Info: https://www.digitalocean.com/community/tutorials/how-to-configure-bind-as-a-caching-or-forwarding-dns-server-on-ubuntu-16-04
+#
+# Example: ansible-playbook -vvl dns bind.yml
+
+- name: Install and configure BIND
+  hosts: dns
+
+  tasks:
+  - name: Update packages
+    yum: name=* state=latest
+
+  - name: Install BIND packages
+    yum: name={{ item }} state=latest
+    with_items:
+      - bind
+      - bind-utils
+
+  - name: Copy /etc/named.conf dns 1
+    template: src=templates/etc/named.conf.master dest=/etc/named.conf backup=yes
+    when: ansible_hostname == "dns1"
+
+  - name: Copy /etc/named.conf dns 2
+    template: src=templates/etc/named.conf.slave dest=/etc/named.conf backup=yes
+    when: ansible_hostname != "dns1"
+
+  - name: Copy /etc/named/named.conf.local dns 1
+    template: src=templates/etc/named/named.conf.local.master dest=/etc/named/named.conf.local backup=yes
+    when: ansible_hostname == "dns1"
+
+  - name: Copy /etc/named/named.conf.local dns 2
+    template: src=templates/etc/named/named.conf.local.slave dest=/etc/named/named.conf.local backup=yes
+    when: ansible_hostname != "dns1"
+
+  - name: Set permissions on /etc/named directory
+    file: path=/etc/named mode=0755
+
+  - name: Create /etc/named/zones directory
+    file: path=/etc/named/zones state=directory
+    when: ansible_hostname == "dns1"
+
+  - name: Copy /etc/named/zones/db.lan dns 1
+    template: src=templates/etc/named/zones/db.lan dest=/etc/named/zones/db.lan backup=yes
+    when: ansible_hostname == "dns1"
+
+  - name: Copy /etc/named/zones/db.172.16 dns 1
+    template: src=templates/etc/named/zones/db.172.16 dest=/etc/named/zones/db.172.16 backup=yes
+    when: ansible_hostname == "dns1"
+
+  - name: Start and enable named service
+    systemd: name=named state=restarted enabled=true
+
