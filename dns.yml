@@ -4,7 +4,7 @@
 # Tutorial: https://www.digitalocean.com/community/tutorials/how-to-configure-bind-as-a-private-network-dns-server-on-centos-7
 # Info: https://www.digitalocean.com/community/tutorials/how-to-configure-bind-as-a-caching-or-forwarding-dns-server-on-ubuntu-16-04
 #
-# Example: ansible-playbook -vvl dns bind.yml
+# Example: ansible-playbook -vvl dns bind.yml --extra-vars "serial=2017000001"
 
 - name: Install and configure BIND
   hosts: dns

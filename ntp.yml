@@ -6,19 +6,15 @@
 # Example: ansible-playbook -vvl ntp ntp.yml
 
 - name: Install and configure Chrony
-  hosts: ntp
-
+  hosts: all
   tasks:
-  - name: Update packages
-    yum: name=* state=latest
-
   - name: Install Chrony packages
-    yum: name={{ item }} state=latest
+    apt: name={{ item }} state=latest
     with_items:
       - chrony
 
   - name: Copy /etc/chrony.conf
     template: src=templates/etc/chrony.conf dest=/etc/chrony.conf backup=yes
   
-  - name: Start and enable Chronyd service
-    systemd: name=chronyd state=restarted enabled=true
+  - name: Start and enable Chrony service
+    systemd: name=chrony state=restarted enabled=true
